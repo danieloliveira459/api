@@ -45,7 +45,7 @@ app.put('/usuarios/:id', async (req, res) => {
   try {
     const user = await prisma.user.update({
       where: {
-        id: req.params.id
+        id: Number(req.params.id) // conversão para número
       },
       data: {
         email: req.body.email,
@@ -54,10 +54,12 @@ app.put('/usuarios/:id', async (req, res) => {
       }
     })
 
-    res.status(200).json(user)
+    res.status(200).json(user) // 200 para atualização
   } catch (error) {
+    res.status(400).json({ error: error.message }) // retorno do erro
   }
 })
+
 
 app.delete('/usuarios/:id', async (req, res) => {
   try {
