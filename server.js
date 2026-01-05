@@ -42,22 +42,35 @@ app.get('/usuarios', async (req, res) => {
 })
 
 app.put('/usuarios/:id', async (req, res) => {
+  const { id } = req.params
+  const { name, email, age } = req.body
+
+  console.log('ID:', id)
+  console.log('BODY:', req.body)
+
+  if (!name || !email || age === undefined) {
+    return res.status(400).json({ error: 'Dados inválidos' })
+  }
+
   try {
     const user = await prisma.user.update({
       where: {
-        id: req.params.id
+        id: id
       },
       data: {
-        email: req.body.email,
-        name: req.body.name,
-        age: req.body.age
+        name,
+        email,
+        age: Number(age)
       }
     })
 
-    res.status(200).json(user)
+    return res.status(200).json(user)
   } catch (error) {
+    console.error(error)
+    return res.status(400).json({ error: error.message })
   }
 })
+
 
 app.delete('/usuarios/:id', async (req, res) => {
   try {
