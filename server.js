@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/usuarios', async (req, res) => {
+app.post('/usuarios/:id', async (req, res) => {
   try {
     const user = await prisma.user.create({
       data: {
@@ -43,20 +43,15 @@ app.get('/usuarios', async (req, res) => {
 
 app.put('/usuarios/:id', async (req, res) => {
   const { id } = req.params
-  const { name, email, age } = req.body
-
-  console.log('ID:', id)
-  console.log('BODY:', req.body)
+  const { name, email, age } = req.body || {}
 
   if (!name || !email || age === undefined) {
-    return res.status(400).json({ error: 'Dados inválidos' })
+    return res.status(400).json({ error: 'Dados obrigatórios' })
   }
 
   try {
     const user = await prisma.user.update({
-      where: {
-        id: Number(req.params.id)
-      },
+      where: { id },
       data: {
         name,
         email,
@@ -64,10 +59,9 @@ app.put('/usuarios/:id', async (req, res) => {
       }
     })
 
-    res.status(200).json(user) // 200 para atualização
+    return res.json(user)
   } catch (error) {
-    res.status(400).json({ error: error.message }) // retorno do erro
-
+    return res.status(400).json({ error: error.message })
   }
 })
 
