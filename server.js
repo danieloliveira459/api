@@ -55,11 +55,7 @@ app.put('/usuarios/:id', async (req, res) => {
   try {
     const user = await prisma.user.update({
       where: {
-<<<<<<< HEAD
-        id: id
-=======
-        id: Number(req.params.id) // conversão para número
->>>>>>> c9fd84b9058505e51d5af86a17e9bd4d8bdf6db3
+        id: Number(req.params.id)
       },
       data: {
         name,
@@ -68,16 +64,10 @@ app.put('/usuarios/:id', async (req, res) => {
       }
     })
 
-<<<<<<< HEAD
-    return res.status(200).json(user)
-  } catch (error) {
-    console.error(error)
-    return res.status(400).json({ error: error.message })
-=======
     res.status(200).json(user) // 200 para atualização
   } catch (error) {
     res.status(400).json({ error: error.message }) // retorno do erro
->>>>>>> c9fd84b9058505e51d5af86a17e9bd4d8bdf6db3
+
   }
 })
 
